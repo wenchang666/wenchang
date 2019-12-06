@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://mybatis.org/schema/mybatis-spring
+       http://mybatis.org/schema/mybatis-spring.xsd">
+
+<import resource="classpath: springmyweb_config.xml"/>
+<context:component-scan base-package="com.xd.service"/>
+<context:property-placeholder location="mysql.properties" ignore-unresolvable="true"/>
+<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+    <property name="driverClass" value="${driver}"></property>
+    <property name="jdbcUrl" value="${url}"></property>
+    <property name="user" value="${username}"></property>
+    <property name="password" value="${password}"></property>
+</bean>
+    <!--      配置事务管理器-->
+<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="dataSource"/>
+</bean>
+    <!--      配置事务-->
+    <!--    配置通知-->
+<tx:advice id="message" transaction-manager="transactionManager">
+    <tx:attributes>
+        <tx:method name="select*" read-only="true" isolation="DEFAULT" propagation="REQUIRED"/>
+        <tx:method name="find*" read-only="true" isolation="DEFAULT" propagation="REQUIRED"/>
+        <tx:method name="delete*" isolation="DEFAULT" propagation="REQUIRED"/>
+        <tx:method name="insert*" isolation="DEFAULT" propagation="REQUIRED"/>
+        <tx:method name="update*" isolation="DEFAULT" propagation="REQUIRED"/>
+    </tx:attributes>
+</tx:advice>
+    <!--         进行事务配置-->
+<aop:config>
+    <!--        配置切点-->
+<aop:pointcut id="qd" expression="within(com.xd.service..*)"/>
+    <aop:advisor advice-ref="message" pointcut-ref="qd"></aop:advisor>
+</aop:config>
+    <!--      配置spring和mybatis整合-->
+<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="dataSource" ref="dataSource"></property>
+    <property name="typeAliasesPackage" value="com.xd.bean"/>
+</bean>
+
+<mybatis:scan base-package="com.xd.dao"></mybatis:scan>
+
+
+
+</beans>

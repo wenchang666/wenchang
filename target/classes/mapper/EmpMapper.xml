@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xd.dao.EmpMapper">
+  <resultMap id="BaseResultMap" type="com.xd.bean.Emp">
+    <!--@Table emp-->
+    <id column="empno" jdbcType="INTEGER" property="empno" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="sal" jdbcType="INTEGER" property="sal" />
+    <result column="hiredate" jdbcType="TIMESTAMP" property="hiredate" />
+    <result column="job" jdbcType="VARCHAR" property="job" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    empno, `name`, sal, hiredate, job
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from emp
+    where empno = #{empno,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from emp
+    where empno = #{empno,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="empno" keyProperty="empno" parameterType="com.xd.bean.Emp" useGeneratedKeys="true">
+    insert into emp (`name`, sal, hiredate, 
+      job)
+    values (#{name,jdbcType=VARCHAR}, #{sal,jdbcType=INTEGER}, #{hiredate,jdbcType=TIMESTAMP}, 
+      #{job,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="empno" keyProperty="empno" parameterType="com.xd.bean.Emp" useGeneratedKeys="true">
+    insert into emp
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="sal != null">
+        sal,
+      </if>
+      <if test="hiredate != null">
+        hiredate,
+      </if>
+      <if test="job != null">
+        job,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sal != null">
+        #{sal,jdbcType=INTEGER},
+      </if>
+      <if test="hiredate != null">
+        #{hiredate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="job != null">
+        #{job,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xd.bean.Emp">
+    update emp
+    <set>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sal != null">
+        sal = #{sal,jdbcType=INTEGER},
+      </if>
+      <if test="hiredate != null">
+        hiredate = #{hiredate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="job != null">
+        job = #{job,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where empno = #{empno,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xd.bean.Emp">
+    update emp
+    set `name` = #{name,jdbcType=VARCHAR},
+      sal = #{sal,jdbcType=INTEGER},
+      hiredate = #{hiredate,jdbcType=TIMESTAMP},
+      job = #{job,jdbcType=VARCHAR}
+    where empno = #{empno,jdbcType=INTEGER}
+  </update>
+
+<select id="selectByAll" parameterType="com.xd.bean.Emp" resultMap="BaseResultMap">
+  select * from emp
+</select>
+
+</mapper>
