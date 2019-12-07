@@ -19,7 +19,26 @@
        http://mybatis.org/schema/mybatis-spring.xsd">
 
 <import resource="classpath: springmyweb_config.xml"/>
-<context:component-scan base-package="com.xd.service"/>
+    <context:property-placeholder location="classpath:mail.properties" ignore-unresolvable="true"></context:property-placeholder>
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="username" value="${mail.sender.name}"/>
+        <property name="password" value="${mail.sender.password}"/>
+        <property name="host" value="${mail.host}"/>
+        <property name="port" value="${mail.port}"/>
+        <property name="protocol" value="${mail.protocol}"/>
+        <property name="defaultEncoding" value="utf-8"/>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.debug">true</prop>
+                <prop key="mail.smtp.ssl.enable">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+            </props>
+        </property>
+
+    </bean>
+
+<!--<context:component-scan base-package="com.xd.service"/>-->
 <context:property-placeholder location="mysql.properties" ignore-unresolvable="true"/>
 <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
     <property name="driverClass" value="${driver}"></property>
