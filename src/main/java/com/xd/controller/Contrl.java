@@ -153,7 +153,7 @@ public class Contrl {
         }
         return "fail";
     }
-   @Autowired
+
    private EmpMapper empMapper;
     @RequestMapping("findAll")
     public String findAll(Model model) {
